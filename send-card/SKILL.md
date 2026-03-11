@@ -501,3 +501,104 @@ https://open.feishu.cn/tool/cardbuilder
 
 **最后更新：** 2026-03-12
 **下次审查：** 2026-04-12
+
+---
+
+## 实战案例：企业养虾攻略卡片
+
+**来源**：`/Users/bytedance/Downloads/企业养虾攻略：从白虾到好虾的新手村指南.card`
+
+这个案例展示了**高质量飞书卡片**的完整设计：
+
+### 卡片亮点
+
+✅ **顶部图片** - 吸引注意力  
+✅ **彩色背景块** - blue-50、violet-50、purple-50 分层突出重点  
+✅ **清晰章节** - 使用 hr 分割线分隔 5 个大章节  
+✅ **丰富内容** - markdown、引用块、代码块、清单、FAQ  
+✅ **多按钮** - 两个按钮引导用户查看完整攻略和加群  
+✅ **视觉一致** - 统一的蓝色主题，渐进式信息呈现  
+
+### 卡片结构
+
+```json
+{
+  "config": {"update_multi": true},
+  "header": {
+    "title": {"content": "企业养虾攻略：从白虾到好虾的新手村指南"},
+    "text_tag_list": [
+      {"text": {"content": "AI助手使用指南"}, "color": "blue"}
+    ],
+    "template": "blue"
+  },
+  "elements": [
+    // 1. 顶部图片
+    {"tag": "img", "img_key": "img_v3_xxx", "corner_radius": "8px"},
+    
+    // 2. 蓝色背景块（核心提示）
+    {
+      "tag": "column_set",
+      "columns": [{
+        "background_style": "blue-50",
+        "elements": [
+          {"tag": "markdown", "content": "**<font color='blue'>写给刚接入飞书 AI 助手的企业团队</font>**"}
+        ]
+      }]
+    },
+    
+    // 3. 分割线
+    {"tag": "hr"},
+    
+    // 4. 多个章节（每个章节都有标题、内容、示例）
+    {"tag": "markdown", "content": "## 先搞清楚：虾是什么？"},
+    {"tag": "markdown", "content": "> **一句话：虾 = 豆包/大模型 + 技能 + 飞书 + 你的业务知识**"},
+    
+    // ... 更多内容 ...
+    
+    // 5. 底部双按钮
+    {
+      "tag": "column_set",
+      "columns": [
+        {
+          "elements": [
+            {
+              "tag": "button",
+              "text": {"content": "查看完整养虾攻略"},
+              "type": "primary_filled",
+              "behaviors": [{"type": "open_url", "default_url": "https://..."}]
+            }
+          ]
+        }
+      ],
+      "direction": "horizontal"
+    }
+  ]
+}
+```
+
+### 设计要点
+
+**1. 信息层次**
+- 顶部图片 → 背景提示 → 核心章节 → 实践清单 → 常见问题 → 行动按钮
+
+**2. 视觉节奏**
+- 图片吸引 → 蓝色强调 → 紫色警告 → 内容展示 → 分割线分隔
+
+**3. 内容密度**
+- 每个章节聚焦一个主题
+- 使用清单、引用、代码块打破大段文字
+- 重要信息放在彩色背景块中
+
+**4. 行动引导**
+- 底部两个按钮：查看完整攻略 + 加入交流群
+- 使用 primary_filled 突出主要行动
+
+**5. 实用性**
+- 基于 OpenClaw 实战经验总结
+- 包含具体操作步骤和配置示例
+- 提供常见问题和解决方案
+- 清单形式便于执行检查
+
+---
+
+**这个卡片是学习飞书卡片设计的绝佳参考！** 🦞
