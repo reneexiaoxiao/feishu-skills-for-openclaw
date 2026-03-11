@@ -1,7 +1,7 @@
 {
-  "name": "feishu-skills",
+  "name": "feishu-skills-for-openclaw",
   "version": "1.0.0",
-  "description": "飞书技能系列 - 独立的、可直接执行的飞书操作 Skill 集合",
+  "description": "飞书技能系列 - OpenClaw 的独立飞书操作 Skill 集合",
   "author": "晓晓 (Xiaoxiao)",
   "license": "MIT",
   "keywords": [
@@ -14,11 +14,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/reneexiaoxiao/feishu-skills.git"
+    "url": "https://github.com/reneexiaoxiao/feishu-skills-for-openclaw.git"
   },
-  "homepage": "https://github.com/reneexiaoxiao/feishu-skills#readme",
+  "homepage": "https://github.com/reneexiaoxiao/feishu-skills-for-openclaw#readme",
   "bugs": {
-    "url": "https://github.com/reneexiaoxiao/feishu-skills/issues"
+    "url": "https://github.com/reneexiaoxiao/feishu-skills-for-openclaw/issues"
   },
   "openclaw": {
     "minVersion": "0.2.0",

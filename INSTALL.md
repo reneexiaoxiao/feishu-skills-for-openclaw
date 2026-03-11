@@ -5,14 +5,14 @@
 ### 一键安装（推荐）
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills/main/install-from-github.sh | bash
+curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills-for-openclaw/main/install-from-github.sh | bash
 ```
 
 ### 手动安装
 
 1. 下载或克隆项目
 ```bash
-git clone https://github.com/reneexiaoxiao/feishu-skills.git
+git clone https://github.com/reneexiaoxiao/feishu-skills-for-openclaw.git
 cd feishu-skills
 ```
 
@@ -176,7 +176,7 @@ A: 不会。每个技能独立，通过触发条件区分。
 
 - 查看 [README.md](README.md)
 - 查看 [TEST-GUIDE.md](TEST-GUIDE.md)
-- 在 [GitHub Issues](https://github.com/reneexiaoxiao/feishu-skills/issues) 提问
+- 在 [GitHub Issues](https://github.com/reneexiaoxiao/feishu-skills-for-openclaw/issues) 提问
 
 ---
 

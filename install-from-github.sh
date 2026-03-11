@@ -33,10 +33,10 @@ echo "临时目录: $TEMP_DIR"
 # 下载项目
 echo -e "${BLUE}📥 下载飞书技能系列...${NC}"
 if command -v git &> /dev/null; then
-    git clone https://github.com/reneexiaoxiao/feishu-skills.git "$TEMP_DIR/feishu-skills"
+    git clone https://github.com/reneexiaoxiao/feishu-skills-for-openclaw.git "$TEMP_DIR/feishu-skills"
 else
     echo -e "${YELLOW}⚠️  未安装 git，使用压缩包下载${NC}"
-    curl -L https://github.com/reneexiaoxiao/feishu-skills/archive/refs/heads/main.zip -o "$TEMP_DIR/feishu-skills.zip"
+    curl -L https://github.com/reneexiaoxiao/feishu-skills-for-openclaw/archive/refs/heads/main.zip -o "$TEMP_DIR/feishu-skills.zip"
     unzip -q "$TEMP_DIR/feishu-skills.zip" -d "$TEMP_DIR"
     mv "$TEMP_DIR/feishu-skills-main" "$TEMP_DIR/feishu-skills"
 fi
@@ -154,6 +154,6 @@ echo "   - 创建一个文档"
 echo "   - 查看日程"
 echo ""
 echo -e "${BLUE}📚 查看完整文档：${NC}"
-echo "   https://github.com/reneexiaoxiao/feishu-skills"
+echo "   https://github.com/reneexiaoxiao/feishu-skills-for-openclaw"
 echo ""
 echo -e "${GREEN}🦞 享受使用飞书技能！${NC}"

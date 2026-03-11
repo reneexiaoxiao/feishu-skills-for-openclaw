@@ -1,8 +1,8 @@
-# 🦞 飞书技能系列
+# 🦞 飞书技能系列 for OpenClaw
 
 > 独立的、可直接执行的飞书操作 Skill 集合
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/reneexiaoxiao/feishu-skills)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/reneexiaoxiao/feishu-skills-for-openclaw-for-openclaw)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Skills-orange.svg)](https://openclaw.ai)
 
@@ -49,14 +49,14 @@
 ### 方式1：一键安装（推荐）
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills-for-openclaw/main/install.sh | bash
 ```
 
 ### 方式2：使用安装脚本
 
 ```bash
 # 克隆或下载项目
-git clone https://github.com/reneexiaoxiao/feishu-skills.git
+git clone https://github.com/reneexiaoxiao/feishu-skills-for-openclaw.git
 cd feishu-skills
 
 # 运行安装脚本
@@ -261,8 +261,8 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ## 📞 联系方式
 
-- 项目主页：[https://github.com/reneexiaoxiao/feishu-skills](https://github.com/reneexiaoxiao/feishu-skills)
-- 问题反馈：[GitHub Issues](https://github.com/reneexiaoxiao/feishu-skills/issues)
+- 项目主页：[https://github.com/reneexiaoxiao/feishu-skills-for-openclaw](https://github.com/reneexiaoxiao/feishu-skills-for-openclaw)
+- 问题反馈：[GitHub Issues](https://github.com/reneexiaoxiao/feishu-skills-for-openclaw/issues)
 
 ---
 

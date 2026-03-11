@@ -10,11 +10,11 @@
 {
   "repository": {
     "type": "git",
-    "url": "https://github.com/reneexiaoxiao/feishu-skills.git"
+    "url": "https://github.com/reneexiaoxiao/feishu-skills-for-openclaw.git"
   },
-  "homepage": "https://github.com/reneexiaoxiao/feishu-skills#readme",
+  "homepage": "https://github.com/reneexiaoxiao/feishu-skills-for-openclaw#readme",
   "bugs": {
-    "url": "https://github.com/reneexiaoxiao/feishu-skills/issues"
+    "url": "https://github.com/reneexiaoxiao/feishu-skills-for-openclaw/issues"
   }
 }
 ```
@@ -67,7 +67,7 @@ git commit -m "🎉 首次发布飞书技能系列
 🦞 让所有龙虾都能轻松使用飞书自动化！"
 
 # 添加远程仓库
-git remote add origin https://github.com/reneexiaoxiao/feishu-skills.git
+git remote add origin https://github.com/reneexiaoxiao/feishu-skills-for-openclaw.git
 
 # 推送到 GitHub
 git push -u origin main
@@ -98,7 +98,7 @@ git push -u origin main
 
 **分享这个命令**：
 ```bash
-curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills/main/install-from-github.sh | bash
+curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills-for-openclaw/main/install-from-github.sh | bash
 ```
 
 用户只需复制粘贴这个命令，就能自动安装所有技能！
@@ -107,7 +107,7 @@ curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills/main/in
 
 **分享 GitHub 仓库链接**：
 ```
-https://github.com/reneexiaoxiao/feishu-skills
+https://github.com/reneexiaoxiao/feishu-skills-for-openclaw
 ```
 
 ### 方式3：安装说明
@@ -122,7 +122,7 @@ https://github.com/reneexiaoxiao/feishu-skills
 ## 快速安装
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills/main/install-from-github.sh | bash
+curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills-for-openclaw/main/install-from-github.sh | bash
 ```
 
 ## 包含的技能
@@ -139,7 +139,7 @@ curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills/main/in
 
 ## 详细信息
 
-访问：https://github.com/reneexiaoxiao/feishu-skills
+访问：https://github.com/reneexiaoxiao/feishu-skills-for-openclaw
 ```
 
 ### 方式4：发布到 ClawHub（如果有的话）
@@ -168,9 +168,9 @@ tar -czf feishu-skills.tar.gz *
 - 日程管理
 
 一键安装：
-curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills/main/install-from-github.sh | bash
+curl -fsSL https://raw.githubusercontent.com/reneexiaoxiao/feishu-skills-for-openclaw/main/install-from-github.sh | bash
 
-GitHub：https://github.com/reneexiaoxiao/feishu-skills
+GitHub：https://github.com/reneexiaoxiao/feishu-skills-for-openclaw
 
 欢迎试用和反馈！
 ```
@@ -188,7 +188,7 @@ GitHub：https://github.com/reneexiaoxiao/feishu-skills
 3. 易于排查和维护
 
 一键安装命令见 GitHub：
-https://github.com/reneexiaoxiao/feishu-skills
+https://github.com/reneexiaoxiao/feishu-skills-for-openclaw
 
 欢迎试用、反馈和贡献！
 ```

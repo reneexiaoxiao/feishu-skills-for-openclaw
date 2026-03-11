@@ -8,7 +8,7 @@
 
 如果你发现了 bug 或有功能建议：
 
-1. 在 [GitHub Issues](https://github.com/reneexiaoxiao/feishu-skills/issues) 搜索是否已有类似问题
+1. 在 [GitHub Issues](https://github.com/reneexiaoxiao/feishu-skills-for-openclaw/issues) 搜索是否已有类似问题
 2. 如果没有，创建新 Issue，提供：
    - 清晰的标题和描述
    - 重现步骤
@@ -24,7 +24,7 @@
 
 2. **克隆你的 Fork**
    ```bash
-   git clone https://github.com/reneexiaoxiao/feishu-skills.git
+   git clone https://github.com/reneexiaoxiao/feishu-skills-for-openclaw.git
    cd feishu-skills
    ```
 
