@@ -1,7 +1,21 @@
 ---
 name: feishu-send-message
 description: |
-  向飞书群聊或私聊发送文本消息。使用 feishu_im_user_message 工具。
+  向飞书群聊或私聊发送文本消息。
+
+  **使用此技能**：用户说"发消息"、"告诉XX"、"给XX说"等。
+
+  **调用工具**：feishu_im_user_message (来自 @larksuite/openclaw-lark 官方插件)
+
+  **关键参数**：
+  - receive_id: 群聊ID (oc_xxx) 或用户ID (ou_xxx)
+  - receive_id_type: "chat_id" (群聊) 或 "open_id" (私聊)
+  - msg_type: "text"
+  - content: JSON字符串，格式为 {"text":"消息内容"}
+
+  **注意**：
+  - 发送卡片 → 使用 feishu-send-card
+  - 发送图片 → 使用 feishu-send-image
 metadata:
   version: 1.0.0
   author: 晓晓 (Xiaoxiao)
@@ -11,197 +25,37 @@ metadata:
     mcp_required: feishu-openclaw-plugin
 ---
 
-# 飞书发送文本消息
+# 发送飞书文本消息
 
-## 工具调用
+调用官方插件的 `feishu_im_user_message` 工具，发送文本消息。
 
-使用 `feishu_send_message` 工具发送消息。
-
-### 参数结构
+## 快速调用
 
 ```json
 {
-  "receive_id": "oc_xxx 或 ou_xxx",
-  "receive_id_type": "chat_id 或 user_id",
-  "content": "消息文本内容",
-  "msg_type": "text"
-}
-```
-
-### 参数说明
-
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| receive_id | string | ✅ | 群聊ID（oc_开头）或用户ID（ou_开头） |
-| receive_id_type | string | ✅ | "chat_id"（群聊）或 "user_id"（私聊） |
-| content | string | ✅ | 消息文本内容 |
-| msg_type | string | ✅ | 固定值 "text" |
-
-## 执行流程
-
-### 1. 识别目标
-
-从用户输入中提取：
-- 群聊名称或ID
-- 用户名称或ID
-
-**示例**：
-```
-用户：给产品群发消息"测试"
-→ receive_id: 需要获取产品群的 ID
-→ 如果用户只提供了群名，先搜索获取群ID
-```
-
-### 2. 确定消息类型
-
-```json
-receive_id_type 判断：
-- oc_ 开头 → "chat_id"（群聊）
-- ou_ 开头 → "user_id"（私聊）
-- 只有群名 → 需要搜索获取 chat_id
-- 只有人名 → 需要搜索获取 user_id
-```
-
-### 3. 构建并发送
-
-```json
-{
-  "receive_id": "oc_a0553eda9014c201e6969b478895c230",
+  "action": "send",
+  "receive_id": "oc_xxx",
   "receive_id_type": "chat_id",
-  "content": "大家好",
-  "msg_type": "text"
+  "msg_type": "text",
+  "content": "{\"text\":\"消息内容\"}"
 }
 ```
 
 ## 常见场景
 
-### 场景1：发送到群聊
-
-**用户输入**：
+**给群聊发消息**：
 ```
-给产品群发消息"下午3点开会"
+用户："给产品群发消息'下午3点开会'"
 ```
 
-**执行**：
-1. 识别目标：产品群
-2. 获取群ID：oc_xxx
-3. 发送消息
-
-**API 调用**：
-```json
-{
-  "receive_id": "oc_xxx",
-  "receive_id_type": "chat_id",
-  "content": "下午3点开会",
-  "msg_type": "text"
-}
+**给个人发消息**：
+```
+用户："告诉张三'任务完成了'"
 ```
 
-### 场景2：发送给个人
+## ID 类型
 
-**用户输入**：
-```
-给张三发消息"你好"
-```
-
-**执行**：
-1. 识别目标：张三
-2. 获取用户ID：ou_xxx
-3. 发送消息
-
-**API 调用**：
-```json
-{
-  "receive_id": "ou_xxx",
-  "receive_id_type": "user_id",
-  "content": "你好",
-  "msg_type": "text"
-}
-```
-
-### 场景3：使用群ID
-
-**用户输入**：
-```
-给 oc_a0553eda9014c201e6969b478895c230 发消息"测试"
-```
-
-**执行**：
-直接使用提供的 ID
-
-**API 调用**：
-```json
-{
-  "receive_id": "oc_a0553eda9014c201e6969b478895c230",
-  "receive_id_type": "chat_id",
-  "content": "测试",
-  "msg_type": "text"
-}
-```
-
-## 错误处理
-
-### 错误1：缺少目标ID
-
-**现象**：用户只说"发消息"，没有目标
-
-**处理**：询问目标
-```
-"请问要发送到哪里？提供群聊ID或用户ID"
-```
-
-### 错误2：缺少消息内容
-
-**现象**：用户说"给XX发消息"，但没有内容
-
-**处理**：询问消息内容
-```
-"请告诉我想要发送的消息内容"
-```
-
-### 错误3：无权限访问
-
-**错误码**：99991663 或类似权限错误
-
-**处理**：
-```
-"无法访问该群聊/用户，可能原因：
-1. 机器人未加入该群聊
-2. 用户无权限发送消息
-3. 目标ID不正确"
-```
-
-## 注意事项
-
-1. **消息内容不要过度转义**：直接使用用户提供的文本
-2. **ID 格式验证**：
-   - 群聊ID：oc_ 开头
-   - 用户ID：ou_ 开头
-3. **内容长度**：单个消息不超过 4096 字节
-4. **频率限制**：避免短时间内大量发送
-
-## 相关 API 文档
-
-- [发送消息 API](https://open.feishu.cn/document/server-docs/im-v1/message/create)
-- [消息类型说明](https://open.feishu.cn/document/server-docs/im-v1/message/message_types)
-- [错误码说明](https://open.feishu.cn/document/server-docs/im-v1/message/error_code)
-
-## 返回结果
-
-成功时返回：
-```json
-{
-  "code": 0,
-  "msg": "success",
-  "data": {
-    "message_id": "om_xxx"
-  }
-}
-```
-
-向用户确认：
-```
-✅ 消息已发送
-消息ID: om_xxx
-```
-
+| 类型 | 前缀 | receive_id_type |
+|------|------|-----------------|
+| 群聊 | oc_ | chat_id |
+| 用户 | ou_ | open_id |
