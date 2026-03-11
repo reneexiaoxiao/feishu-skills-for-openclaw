@@ -1,27 +1,7 @@
 ---
 name: feishu-send-message
 description: |
-  向飞书群聊或私聊发送文本消息。
-
-  **当以下情况时使用此 Skill**：
-  (1) 用户明确要求发送消息到群聊或私聊
-  (2) 关键词："发送消息"、"发消息"、"给XX说"、"告诉XX"
-  (3) 目标对象：群聊（oc_开头）或用户（ou_开头）
-  (4) 消息类型：文本内容（不包括卡片、图片等复杂类型）
-
-  **参数说明**：
-  - receive_id: 群聊ID（oc_开头）或用户ID（ou_开头）
-  - receive_id_type: "chat_id"（群聊）或 "user_id"（私聊）
-  - content: 消息文本内容
-  - msg_type: "text"
-
-  **NOT 使用此 Skill 的情况**：
-  - 发送卡片 → 使用 feishu-send-card
-  - 发送图片 → 使用 feishu-send-image
-  - @某人 → 使用 feishu-mention-user
-  - 只是询问如何发送 → 不调用任何工具
-
-  **API 参考**：https://open.feishu.cn/document/server-docs/im-v1/message/create
+  向飞书群聊或私聊发送文本消息。使用 feishu_im_user_message 工具。
 metadata:
   version: 1.0.0
   author: 晓晓 (Xiaoxiao)

@@ -2,380 +2,502 @@
 name: feishu-send-card
 description: |
   向飞书群聊或私聊发送交互式卡片消息。
-
+  
   **当以下情况时使用此 Skill**：
   (1) 用户明确要求发送卡片到群聊或私聊
   (2) 关键词："发送卡片"、"发卡片"、"card"、"卡片消息"
   (3) 需要发送结构化信息（项目进展、任务分配、会议通知等）
   (4) 需要更丰富的展示形式（不仅是文本）
-
-  **卡片类型判断**：
-  - 项目进展 → 使用 progress 卡片模板
-  - 任务分配 → 使用 task 卡片模板
-  - 会议通知 → 使用 meeting 卡片模板
-  - 自定义内容 → 使用 custom 卡片类型
-
-  **参数说明**：
-  - receive_id: 群聊ID（oc_开头）或用户ID（ou_开头）
-  - receive_id_type: "chat_id"（群聊）或 "user_id"（私聊）
-  - card: 卡片 JSON 对象（遵循飞书卡片规范）
-
-  **NOT 使用此 Skill 的情况**：
-  - 发送纯文本消息 → 使用 feishu-send-message
-  - 发送图片 → 使用 feishu-send-image
-  - 只是询问如何发送卡片 → 不调用任何工具
-
-  **API 参考**：
-  - https://open.feishu.cn/document/uAjLw4CM/ukzMukzMukzM/feishu-cards/feishu-card-overview
-  - https://open.feishu.cn/document/server-docs/im-v1/message/create
+  
 metadata:
-  version: 1.0.0
+  version: 2.0.0
   author: 晓晓 (Xiaoxiao)
   tags: [feishu, card, interactive]
   openclaw:
     emoji: 📋
     mcp_required: feishu-openclaw-plugin
+  last_updated: 2026-03-12
 ---
 
-# 飞书发送卡片消息
+# 飞书发送卡片消息 Skill
 
-## 工具调用
+## 概述
 
-使用 `feishu_send_card` 工具发送卡片。
+向飞书群聊或私聊发送交互式卡片消息。使用 `feishu_im_user_message` 工具，设置 `msg_type="interactive"`。
 
-### 参数结构
+---
 
+## 使用场景
+
+### ✅ 适合用卡片的场景
+- 项目进展汇报（带进度条、状态标签）
+- 任务分配通知（带负责人、截止时间）
+- 会议通知（带时间、地点、参会人）
+- 数据报表（带图表、关键指标）
+- 知识分享（带目录、章节、跳转链接）
+- 审批流程（带按钮、表单）
+
+### ❌ 不适合用卡片的场景
+- 简单文本消息 → 使用 `feishu-send-message`
+- 纯图片 → 使用 `feishu-send-image`
+- 只是询问如何发送卡片 → 不调用任何工具
+
+---
+
+## 卡片设计原则
+
+### 1. 视觉层次清晰
+- **顶部图片**：吸引注意力（可选）
+- **标题区域**：Header 部分，包含标题、副标题、标签
+- **内容区域**：Body 部分，分章节展示
+- **行动区域**：底部按钮，引导用户操作
+
+### 2. 颜色使用规范
+飞书卡片支持的背景色：
+- `blue-50` - 蓝色（信息提示）
+- `purple-50` - 紫色（重要提示）
+- `violet-50` - 紫罗兰色（警告提示）
+- `green-50` - 绿色（成功提示）
+- `red-50` - 红色（错误提示）
+- `yellow-50` - 黄色（注意提示）
+- `grey-50` - 灰色（次要信息）
+
+### 3. 排版技巧
+- **分割线**：用 `{"tag": "hr"}` 分隔章节
+- **多列布局**：用 `column_set` + `column` 创建并列内容
+- **背景块**：用 `background_style` 突出重点内容
+- **间距控制**：用 `margin`、`padding`、`vertical_spacing` 调整间距
+
+### 4. 内容组织
+- **先说结论**：重要信息放在前面
+- **分层展示**：用标题、列表、引用等结构化内容
+- **适度留白**：不要塞太满，保持呼吸感
+- **行动明确**：底部按钮清晰指引下一步
+
+---
+
+## 卡片结构详解
+
+### Header（标题区域）
 ```json
 {
-  "receive_id": "oc_xxx 或 ou_xxx",
-  "receive_id_type": "chat_id 或 user_id",
-  "card": {
-    "header": { ... },
-    "elements": [ ... ]
+  "header": {
+    "title": {
+      "tag": "plain_text",
+      "content": "卡片标题"
+    },
+    "subtitle": {
+      "tag": "plain_text",
+      "content": "副标题（可选）"
+    },
+    "text_tag_list": [
+      {
+        "tag": "text_tag",
+        "text": {
+      "tag": "plain_text",
+          "content": "标签文字"
+        },
+      "color": "blue"
+      }
+    ],
+    "template": "blue",
+    "padding": "12px 12px 12px 12px"
   }
 }
 ```
 
-### 参数说明
+**说明：**
+- `title`：主标题（必填）
+- `subtitle`：副标题（可选）
+- `text_tag_list`：标签列表（可选）
+- `template`：颜色主题（blue/purple/red/green/yellow/grey）
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| receive_id | string | ✅ | 群聊ID（oc_开头）或用户ID（ou_开头） |
-| receive_id_type | string | ✅ | "chat_id"（群聊）或 "user_id"（私聊） |
-| card | object | ✅ | 卡片 JSON 对象 |
+---
 
-## 卡片模板
+### Body（内容区域）
 
-### 模板1：项目进展卡片
-
-**适用场景**：项目进度汇报、工作总结
-
-**用户输入示例**：
-```
-给产品群发项目进展卡片：
-- 项目：飞书集成
-- 进度：80%
-- 状态：正常
-- 更新时间：今天
+## 1. 图片元素
+```json
+{
+  "tag": "img",
+  "img_key": "img_v3_xxx",
+  "scale_type": "fit_horizontal",
+  "corner_radius": "8px",
+  "margin": "0px 0px 0px 0px"
+}
 ```
 
-**卡片结构**：
+**说明：**
+- `img_key`：图片 key（需先上传到飞书）
+- `scale_type`：缩放方式（fit_horizontal/crop_center）
+- `corner_radius`：圆角大小
+
+---
+
+#### 2. Markdown 文本
+```json
+{
+  "tag": "markdown",
+  "content": "## 标题\n\n正文内容",
+  "text_size": "normal"
+}
+```
+
+**支持的 Markdown 语法：**
+- 标题：`## 标题`
+- 加粗：`**加粗**`
+- 颜色：`<font color='blue'>蓝色文字</font>`
+- 列表：`- 列表项`
+- 引用：`> 引用内容`
+- 代码块：` ```Plain Text\n代码\n``` `
+
+---
+
+#### 3. 彩色背景块
+```json
+{
+  "tag": "column_set",
+  "columns": [
+    {
+      "tag": "column",
+      "width": "weighted",
+      "background_style": "blue-50",
+      "elements": [
+        {
+          "tag": "markdown",
+          "content": "**重点内容**"
+        }
+      ],
+      "padding": "12px 12px 12px 12px",
+      "weight": 1
+    }
+  ]
+}
+```
+
+**说明：**
+- `background_style`：背景颜色
+- `padding`：内边距
+- `weight`：列宽权重
+
+---
+
+#### 4. 分割线
+```json
+{
+  "tag": "hr",
+  "margin": "0px 0px 0px 0px"
+}
+```
+
+---
+
+#### 5. 按钮
+```json
+{
+  "tag": "button",
+  "text": {
+    "tag": "plain_text",
+    "content": "按钮文字"
+  },
+  "type": "primary_filled",
+  "width": "default",
+  "size": "medium",
+  "behaviors": [
+    {
+      "type": "open_url",
+      "default_url": "https://example.com",
+    "pc_url": "https://example.com",
+      "ios_url": "https://example.com",
+      "android_url": "https://example.com"
+    }
+  ]
+}
+```
+
+**按钮样式：**
+- `primary_filled`：主要按钮（蓝色填充）
+- `default`：默认按钮（白色边框）
+- `danger`：危险按钮（红色）
+
+---
+
+## 完整示例
+### 示例 1：项目进展卡片
 ```json
 {
   "config": {
-    "wide_screen_mode": true
+    "update_multi": true
   },
   "header": {
     "title": {
-      "content": "📊 飞书集成项目进展",
-      "tag": "plain_text"
+      "tag": "plain_text",
+      "content": "项目进展周报"
     },
+    "text_tag_list": [
+      {
+        "tag": "text_tag",
+        "text": {
+          "tag": "plain_text",
+          "content": "进行中"
+        },
+      "color": "blue"
+      }
+    ],
     "template": "blue"
   },
   "elements": [
     {
-      "tag": "div",
-      "text": {
-        "content": "**进度：** 80%",
-        "tag": "lark_md"
-      }
+      "tag": "markdown",
+      "content": "## 本周完成\n- ✅ 完成需求评审\n- ✅ 完成技术方案设计\n- ✅ 完成原型设计"
     },
     {
-      "tag": "div",
-      "text": {
-        "content": "**状态：** 正常",
-        "tag": "lark_md"
-      }
+    "tag": "hr"
     },
     {
-      "tag": "div",
-      "text": {
-        "content": "**更新时间：** 2026-03-11",
-        "tag": "lark_md"
-      }
+      "tag": "markdown",
+      "content": "## 下周计划\n\n- 🔄 开发核心功能\n- 🔄 编写单元测试\n- 🔄 准备演示环境"
+    },
+    {
+      "tag": "hr"
+    },
+    {
+      "tag": "column_set",
+    "columns": [
+        {
+          "tag": "column",
+       "width": "weighted",
+          "background_style": "red-50",
+          "elements": [
+            {
+         "tag": "markdown",
+          "content": "**⚠️ 风险提示**\n第三方 API 对接存在延期风险，需要提前准备备选方案。"
+          }
+     ],
+          "padding": "12px 12px 12px 12px",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "tag": "column_set",
+      "columns": [
+        {
+          "tag": "column",
+          "width": "auto",
+       "elements": [
+            {
+              "tag": "button",
+        "text": {
+            "tag": "plain_text",
+                "content": "查看详细进度"
+              },
+              "type": "primary_filled",
+              "behaviors": [
+          {
+                  "type": "open_url",
+         "default_url": "https://example.com/project"
+                }
+              ]
+          }
+          ]
+        }
+      ]
     }
   ]
 }
 ```
 
-### 模板2：任务分配卡片
+---
 
-**适用场景**：分配任务给团队成员
-
-**用户输入示例**：
-```
-给项目组发任务卡片：
-- 任务：完成API开发
-- 负责人：张三
-- 截止日期：2026-03-15
-```
-
-**卡片结构**：
+### 示例 2：会议通知卡片
 ```json
 {
+  "config": {
+    "update_multi": true
+  },
   "header": {
     "title": {
-      "content": "📋 新任务分配",
-      "tag": "plain_text"
+      "tag": "plain_text",
+      "content": "产品评审会议"
     },
-    "template": "green"
+    "text_tag_list": [
+      {
+        "tag": "text_tag",
+        "text": {
+          "tag": "plain_text",
+          "content": "明天 14:00"
+        },
+        "color": "blue"
+      }
+    ],
+    "template": "blue"
   },
   "elements": [
     {
-      "tag": "div",
-      "text": {
-        "content": "**任务：** 完成API开发",
-        "tag": "lark_md"
-      }
+      "tag": "markdown",
+      "content": "**📅 时间**：2026-03-13 14:00-15:30\n\n**📍 地点**：会议室 A\n\n**👥 参会人**：@张三 @李四 @王五"
     },
     {
-      "tag": "div",
-      "text": {
-        "content": "**负责人：** <at user_id=\"ou_xxx\">张三</at>",
-        "tag": "lark_md"
-      }
+      "tag": "hr"
     },
     {
-      "tag": "div",
-      "text": {
-        "content": "**截止日期：** 2026-03-15",
-        "tag": "lark_md"
-      }
+      "tag": "markdown",
+      "content": "## 会议议程\n\n1. 产品需求评审（30 分钟）\n2. 技术方案讨论（30 分钟）\n3. 排期确认（30 分钟）"
+    },
+    {
+      "tag": "hr"
+    },
+    {
+      "tag": "column_set",
+      "columns": [
+        {
+          "tag": "column",
+          "width": "weighted",
+          "background_style": "yellow-50",
+          "elements": [
+            {
+           "tag": "markdown",
+              "content": "**📝 会前准备**\n\n请提前阅读需求文档，准备好问题和建议。"
+          }
+          ],
+          "padding": "12px 12px 12px 12px",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "tag": "column_set",
+      "columns": [
+        {
+          "tag": "column",
+          "width": "auto",
+          "elements": [
+            {
+              "tag": "button",
+         "text": {
+                "tag": "plain_text",
+                "content": "查看需求文档"
+              },
+              "type": "primary_filled",
+              "behaviors": [
+           {
+              "type": "open_url",
+               "default_url": "https://example.com/doc"
+                }
+              ]
+            },
+       {
+              "tag": "button",
+              "text": {
+                "tag": "plain_text",
+           "content": "加入日历"
+              },
+              "type": "default",
+              "behaviors": [
+                {
+             "type": "open_url",
+         "default_url": "https://example.com/calendar"
+          }
+           ]
+            }
+          ],
+          "direction": "horizontal"
+        }
+      ]
     }
   ]
 }
 ```
 
-### 模板3：会议通知卡片
+---
 
-**适用场景**：会议邀请和通知
+## 发送卡片的步骤
 
-**用户输入示例**：
-```
-给项目组发会议通知：
-- 时间：明天下午2点
-- 时长：1小时
-- 主题：项目进度同步
-- 参会人：@张三 @李四 @王五
-- 地点：302会议室
-```
+### 1. 构建卡片 JSON
+按照上面的结构，构建完整的卡片 JSON。
 
-**卡片结构**：
-```json
-{
-  "header": {
-    "title": {
-      "content": "📅 会议通知",
-      "tag": "plain_text"
-    },
-    "template": "red"
-  },
-  "elements": [
-    {
-      "tag": "div",
-      "text": {
-        "content": "**会议主题：** 项目进度同步",
-        "tag": "lark_md"
-      }
-    },
-    {
-      "tag": "div",
-      "text": {
-        "content": "**时间：** 明天下午 2:00 - 3:00",
-        "tag": "lark_md"
-      }
-    },
-    {
-      "tag": "div",
-      "text": {
-        "content": "**地点：** 302会议室",
-        "tag": "lark_md"
-      }
-    },
-    {
-      "tag": "div",
-      "text": {
-        "content": "**参会人：** <at user_id=\"ou_xxx\">张三</at> <at user_id=\"ou_yyy\">李四</at> <at user_id=\"ou_zzz\">王五</at>",
-        "tag": "lark_md"
-      }
-    }
-  ]
-}
+### 2. 调用工具发送
+```javascript
+feishu_im_user_message({
+  action: "send",
+  receive_id: "oc_xxx", // 群聊 ID 或用户 ID
+  receive_id_type: "chat_id", // 或 "open_id"
+  msg_type: "interactive",
+  content: JSON.stringify({
+    config: { update_multi: true },
+    header: { ... },
+    elements: [ ... ]
+  })
+})
 ```
 
-## 执行流程
+### 3. 验证结果
+- 检查卡片是否正常显示
+- 确认按钮跳转链接有效
+- 确认颜色和排版符合预期
 
-### 1. 识别卡片类型
+---
 
-根据用户输入判断使用哪个模板：
+## 常见问题
 
-| 关键词 | 卡片类型 |
-|--------|---------|
-| 进展、进度、项目更新 | project-progress |
-| 任务、分配、todo | task-assignment |
-| 会议、通知、邀请 | meeting-notice |
-| 其他 | custom |
+### Q1: 图片如何上传？
+**A:** 需要先使用飞书 API 上传图片，获取 `img_key`，然后在卡片中引用。
 
-### 2. 提取卡片内容
-
-从用户输入中提取结构化信息：
-
-**示例输入**：
-```
-发项目进展卡片：
-项目：飞书集成
-进度：80%
-状态：正常
-```
-
-**提取结果**：
-```json
-{
-  "project": "飞书集成",
-  "progress": "80%",
-  "status": "正常"
-}
-```
-
-### 3. 构建 JSON
-
-使用提取的内容填充模板。
-
-### 4. 发送卡片
-
-调用 `feishu_send_card` 工具。
-
-## 自定义卡片
-
-当用户提供自定义结构时：
-
-**用户输入**：
-```
-发卡片，标题是"重要通知"，内容是"明天放假"
-```
-
-**构建卡片**：
-```json
-{
-  "header": {
-    "title": {
-      "content": "重要通知",
-      "tag": "plain_text"
-    }
-  },
-  "elements": [
-    {
-      "tag": "div",
-      "text": {
-        "content": "明天放假",
-        "tag": "plain_text"
-      }
-    }
-  ]
-}
-```
-
-## 卡片元素类型
-
-### 常用元素
-
-| 类型 | tag | 用途 |
-|------|-----|------|
-| 文本块 | div | 显示文本内容 |
-| Markdown | div with lark_md | 支持富文本格式 |
-| 分割线 | hr | 分隔内容 |
-| 图片 | img | 显示图片 |
-| 按钮 | action | 交互按钮 |
-| 人员提及 | at user_id | @某人 |
-
-### Markdown 格式
-
-在 `tag: "lark_md"` 中支持：
-- **粗体**：`**文本**`
-- *斜体*：`*文本*`
-- ~~删除线~~：`~~文本~~`
-- `行内代码`
-- 链接：`[文本](URL)`
-
-## 错误处理
-
-### 错误1：缺少必需信息
-
-**处理**：询问用户
-```
-"请问卡片需要包含哪些内容？
-例如：项目名称、进度、状态等"
-```
-
-### 错误2：卡片格式错误
-
-**错误码**：99991400 或类似
-
-**处理**：
-```
-"卡片格式不正确，请检查：
+### Q2: 卡片发送失败怎么办？
+**A:** 检查：
 1. JSON 格式是否正确
-2. 必需字段是否完整
-3. 字段类型是否匹配"
-```
+2. 是否有 OAuth 授权
+3. 接收者 ID 是否正确
+4. 卡片结构是否符合规范
 
-### 错误3：@用户ID无效
+### Q3: 如何调试卡片样式？
+**A:** 可以使用飞书开放平台的卡片搭建工具：
+https://open.feishu.cn/tool/cardbuilder
 
-**处理**：
-```
-"用户ID格式不正确，应为 ou_ 开头的字符串"
-```
+### Q4: 卡片可以交互吗？
+**A:** 可以！支持：
+- 按钮点击跳转
+- 表单提交
+- 回调处理
+（需要配置回调接口）
 
-## 注意事项
+---
 
-1. **卡片大小限制**：JSON 不超过 50KB
-2. **元素数量限制**：单个卡片不超过 50 个元素
-3. **颜色主题**：blue, green, red, yellow, grey
-4. **@人功能**：需要使用 feishu-mention-user 获取用户ID
+## 最佳实践
 
-## 相关 API 文档
+### 1. 内容优先
+- 先确定要传达的信息
+- 再选择合适的卡片样式
+- 不要为了炫技而过度设计
 
-- [飞书卡片概述](https://open.feishu.cn/document/uAjLw4CM/ukzMukzMukzM/feishu-cards/feishu-card-overview)
-- [卡片元素说明](https://open.feishu.cn/document/uAjLw4CM/ukzMukzMukzM/feishu-cards/card-contents)
-- [发送卡片 API](https://open.feishu.cn/document/server-docs/im-v1/message/create)
-- [卡片构建工具](https://open.feishu.cn/document/tools-and-resources/message-card-builder)
+### 2. 保持简洁
+- 一个卡片聚焦一个主题
+- 避免信息过载
+- 重要信息放在前面
 
-## 返回结果
+### 3. 视觉一致
+- 同类卡片使用统一风格
+- 颜色使用有规律
+- 排版保持一致
 
-成功时返回：
-```json
-{
-  "code": 0,
-  "msg": "success",
-  "data": {
-    "message_id": "om_xxx"
-  }
-}
-```
+### 4. 测试验证
+- 在不同设备上测试（PC、手机）
+- 检查链接是否有效
+- 确认文字是否清晰
 
-向用户确认：
-```
-✅ 卡片已发送
-消息ID: om_xxx
-```
+---
 
+## 学习资源
+
+### 官方文档
+- 飞书卡片搭建工具：https://open.feishu.cn/tool/cardbuilder
+- 卡片开发指南：https://open.feishu.cn/document/uAjLw4CM/ukzMukzMukzM/feishu-cards/feishu-card-overview
+
+### 参考案例
+- 企业养虾攻略卡片（见 `/Users/bytedance/Downloads/企业养虾攻略：从白虾到好虾的新手村指南.card`）
+
+---
+
+**最后更新：** 2026-03-12
+**下次审查：** 2026-04-12
