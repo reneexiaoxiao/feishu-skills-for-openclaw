@@ -1,0 +1,56 @@
+{
+  "name": "feishu-skills",
+  "version": "1.0.0",
+  "description": "飞书技能系列 - 独立的、可直接执行的飞书操作 Skill 集合",
+  "author": "晓晓 (Xiaoxiao)",
+  "license": "MIT",
+  "keywords": [
+    "feishu",
+    "lark",
+    "openclaw",
+    "skills",
+    "automation",
+    "mcp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reneexiaoxiao/feishu-skills.git"
+  },
+  "homepage": "https://github.com/reneexiaoxiao/feishu-skills#readme",
+  "bugs": {
+    "url": "https://github.com/reneexiaoxiao/feishu-skills/issues"
+  },
+  "openclaw": {
+    "minVersion": "0.2.0",
+    "type": "skills-collection",
+    "skills": [
+      "send-message",
+      "send-card",
+      "send-image",
+      "mention-user",
+      "create-doc",
+      "update-doc",
+      "fetch-doc",
+      "bitable",
+      "calendar"
+    ]
+  },
+  "scripts": {
+    "install": "bash ./install.sh",
+    "test": "bash ./test.sh"
+  },
+  "files": [
+    "send-message/",
+    "send-card/",
+    "send-image/",
+    "mention-user/",
+    "create-doc/",
+    "update-doc/",
+    "fetch-doc/",
+    "bitable/",
+    "calendar/",
+    "install.sh",
+    "README.md",
+    "TEST-GUIDE.md"
+  ]
+}
